@@ -33,16 +33,22 @@ class univariateTest(unittest.TestCase):
     def testMinimum(self):
         self.failUnlessAlmostEqual(Minimum(intvector),0, places=0)
         self.failUnlessAlmostEqual(Minimum(intmatrix),0, places=0)
-        self.failUnlessAlmostEqual(Minimum(fltvector),0.37, places=2)
+        self.failUnlessAlmostEqual(Minimum(fltvector),0.46, places=2)
         self.failUnlessAlmostEqual(Minimum(fltmisvec),0.46, places=2)
         self.failUnlessAlmostEqual(Minimum(fltmismat),0.37, places=2)
 
     def testMaximum(self):
         self.failUnlessAlmostEqual(Maximum(intvector),19, places=0)
         self.failUnlessAlmostEqual(Maximum(intmatrix),19, places=0)
-        self.failUnlessAlmostEqual(Maximum(fltvector),19.28, places=2)
+        self.failUnlessAlmostEqual(Maximum(fltvector),19.021, places=2)
         self.failUnlessAlmostEqual(Maximum(fltmisvec),19.021, places=3)
         self.failUnlessAlmostEqual(Maximum(fltmismat),19.28, places=2)
+
+    def testRange(self):
+        self.failUnlessAlmostEqual(Range(intvector),19, places=0)
+        self.failUnlessAlmostEqual(Range(fltvector),18.561, places=3)
+        self.failUnlessAlmostEqual(Range(intmisvec),19, places=0)
+        self.failUnlessAlmostEqual(Range(fltmisvec),18.561, places=3)
 
     def testSampVar(self):
         self.failUnlessAlmostEqual(SampVar(intvector),67.55357, places=5)
@@ -54,7 +60,7 @@ class univariateTest(unittest.TestCase):
     def testPopVar(self):
         self.failUnlessAlmostEqual(PopVar(intvector),59.10938, places=4)
         #self.failUnlessAlmostEqual(PopVar(intmatrix),, places=)
-        self.failUnlessAlmostEqual(PopVar(fltvector),58.53366, places=4)
+        self.failUnlessAlmostEqual(PopVar(fltvector),58.35366, places=4)
         self.failUnlessAlmostEqual(PopVar(fltmisvec),60.79299, places=4)
         #self.failUnlessAlmostEqual(SampVar(fltmismat),0.37, places=2)
 
@@ -76,6 +82,41 @@ class univariateTest(unittest.TestCase):
         self.failUnlessAlmostEqual(StdErr(fltvector),2.887254, places=6)
         self.failUnlessAlmostEqual(StdErr(fltmisvec),3.402884, places=6)
 
+    def testQ1(self):
+        self.failUnlessAlmostEqual(Q1(longvec, 0.25), 2.889, places=3)
+        self.failUnlessAlmostEqual(Q1(longvec, 0.75), 6.814, places=3)
+
+    def testQ2(self):
+        self.failUnlessAlmostEqual(Q2(longvec, 0.25), 3.1175, places=4)
+        self.failUnlessAlmostEqual(Q2(longvec, 0.75), 7.39, places=2)
+ 
+    def testQ3(self):
+        self.failUnlessAlmostEqual(Q3(longvec, 0.25), 2.889, places=3)
+        self.failUnlessAlmostEqual(Q3(longvec, 0.75), 6.814, places=3)
+ 
+    def testQ4(self):
+        self.failUnlessAlmostEqual(Q4(longvec, 0.25), 2.889, places=3)
+        self.failUnlessAlmostEqual(Q4(longvec, 0.75), 6.814, places=3)
+ 
+    def testQ5(self):
+        self.failUnlessAlmostEqual(Q5(longvec, 0.25), 3.1175, places=4)
+        self.failUnlessAlmostEqual(Q5(longvec, 0.75), 7.39, places=2)
+ 
+    def testQ6(self):
+        self.failUnlessAlmostEqual(Q6(longvec, 0.25), 3.00325, places=5)
+        self.failUnlessAlmostEqual(Q6(longvec, 0.75), 7.678, places=3)
+ 
+    def testQ7(self):
+        self.failUnlessAlmostEqual(Q7(longvec, 0.25), 3.23175, places=5)
+        self.failUnlessAlmostEqual(Q7(longvec, 0.75), 7.102, places=3)
+ 
+    def testQ8(self):
+        self.failUnlessAlmostEqual(Q8(longvec, 0.25), 3.079417, places=6)
+        self.failUnlessAlmostEqual(Q8(longvec, 0.75), 7.486, places=3)
+ 
+    def testQ9(self):
+        self.failUnlessAlmostEqual(Q9(longvec, 0.25), 3.088938, places=5)
+        self.failUnlessAlmostEqual(Q9(longvec, 0.75), 7.462, places=3)
 
 
 if __name__ == '__main__':

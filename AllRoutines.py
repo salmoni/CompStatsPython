@@ -83,8 +83,13 @@ def Msort(data):
 	return numpy.ma.reshape(numpy.ma.sort(numpy.ma.reshape(data, length)), dims)
 
 def UniqueVals(data):
-        data = numpy.ma.array(data)
-        vals = sort(list(set(data.compressed())))
+    data = numpy.ma.array(data)
+    uniques = numpy.ma.sort(list(set(data.compressed())))
+    numbers = numpy.zeros((len(uniques)))
+    for idx, unique in enumerate(uniques):
+        number = numpy.ma.equal(data, unique).sum()
+        numbers[idx] = number
+    return uniques, numbers
 
 def CalculateRanks(data, start = 1):
         data = numpy.ma.array(data)
@@ -181,7 +186,7 @@ def Proportions(data):
 	"proportions", "proportion"
 	"""
 	un, nu = UniqueVals(data)
-	return un, nu / numpy.ma.sum(data)
+	return un, nu / numpy.ma.sum(nu)
 
 def Percentages(data):
     un, nu = Proportions(data)
@@ -211,7 +216,7 @@ def CumSum(data):
 	elif "int" in t:
 		return int(cumsum(data)[-1])
 	elif 'float' in t:
-		return float(cumsum(data)[-1])
+		return float(CumSum(data)[-1])
 	else: 
 		return None
 
@@ -223,9 +228,9 @@ def CumProduct(data):
 	if 'string' in t:
 		return None
 	elif "int" in t:
-		return int(numpy.ma.CumProduct(data)[-1])
+		return int(numpy.ma.cumprod(data)[-1])
 	elif 'float' in t:
-		return float(numpy.ma.CumProduct(data)[-1])
+		return float(numpy.ma.cumprod(data)[-1])
 	else: 
 		return None
 
@@ -234,14 +239,14 @@ def CumPercent(data):
 	"cumulative percent", "cumpercent", "cumulative percentage"
 	"""
 	# assumes numbers of frequencies are sent
-	return float((data / float(numpy.ma.sum(data))) * 100.0)
+	return data / float(numpy.ma.sum(data)) * 100.0
 
 def Frequencies(data):
-	"""
-	"frequencies", "frequency"
-	"""
-	un, nu = bstats.UniqueVals(data)
-	return un, nu, nu / CumPercent(nu)
+    """
+    "frequencies", "frequency", "freq"
+    """
+    uniques, numbers = UniqueVals(data)
+    return uniques, numbers, CumPercent(numbers) / 100.0 #, nu, nu / CumPercent(nu)
 
 def TrimmedData(data, Lsplit, Usplit = None):
 	if Usplit == None:
