@@ -61,21 +61,21 @@ class univariateTest(unittest.TestCase):
         self.failUnlessAlmostEqual(PopVar(intvector),59.10938, places=4)
         #self.failUnlessAlmostEqual(PopVar(intmatrix),, places=)
         self.failUnlessAlmostEqual(PopVar(fltvector),58.35366, places=4)
-        self.failUnlessAlmostEqual(PopVar(fltmisvec),60.79299, places=4)
+        self.failUnlessAlmostEqual(PopVar(fltmisvec),57.89808, places=4)
         #self.failUnlessAlmostEqual(SampVar(fltmismat),0.37, places=2)
 
     def testSampStdDev(self):
-        self.failUnlessAlmostEqual(SampVar(intvector),8.219098, places=6)
-        self.failUnlessAlmostEqual(SampVar(intmisvec),8.430105, places=6)
-        self.failUnlessAlmostEqual(SampVar(fltvector),8.166389, places=6)
-        self.failUnlessAlmostEqual(SampVar(fltmisvec),8.335328, places=6)
+        self.failUnlessAlmostEqual(SampStdDev(intvector),8.219098, places=6)
+        self.failUnlessAlmostEqual(SampStdDev(intmisvec),8.430105, places=6)
+        self.failUnlessAlmostEqual(SampStdDev(fltvector),8.166389, places=6)
+        self.failUnlessAlmostEqual(SampStdDev(fltmisvec),8.335328, places=6)
         #self.failUnlessAlmostEqual(SampVar(fltmismat),0.37, places=2)
 
     def testPopStdDev(self):
-        self.failUnlessAlmostEqual(PopStdDev(intvector),7.191711, places=6)
-        self.failUnlessAlmostEqual(PopStdDev(intmatrix),7.376342, places=6)
-        self.failUnlessAlmostEqual(PopStdDev(fltvector),7.14599, places=6)
-        self.failUnlessAlmostEqual(PopStdDev(fltmisvec),7.293412, places=6)
+        self.failUnlessAlmostEqual(PopStdDev(intvector),7.688262, places=6)
+        self.failUnlessAlmostEqual(PopStdDev(intmisvec),7.695598, places=6)
+        self.failUnlessAlmostEqual(PopStdDev(fltvector),7.638957, places=6)
+        self.failUnlessAlmostEqual(PopStdDev(fltmisvec),7.609079, places=6)
         #self.failUnlessAlmostEqual(SampVar(fltmismat),0.37, places=2)
 
     def testStdErr(self):

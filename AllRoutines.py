@@ -540,7 +540,7 @@ def PopVar(data):
 	t = str(data.dtype.type)
 	if 'int' in t or 'float' in t:
 		try:
-			return float(SSDevs(data) / float(numpy.ma.count(data)))
+			return float(SSDevs(data) / float(Count(data)))
 		except:
 			return None
 	else:
