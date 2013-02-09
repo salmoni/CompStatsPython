@@ -178,7 +178,7 @@ def Range(data):
 def Midrange(data):
     maximum = Maximum(data)
     minimum = Minimum(data)
-    midrange = (maximum - minimum) / 2.0
+    midrange = (maximum + minimum) / 2.0
     return midrange
 
 def Proportions(data):
