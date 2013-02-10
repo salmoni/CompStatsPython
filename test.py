@@ -60,6 +60,14 @@ class univariateTest(unittest.TestCase):
     def testMidRange(self):
         self.assertAlmostEqual(Midrange(longvec),5.0965, places=4)
 
+    def testFrequencies(self):
+        vals, freqs = Frequencies(uniques)
+        self.assertListEqual(vals.tolist(), [1, 2, 3, 4])
+        self.assertListEqual(freqs.round(4).tolist(), [2,7,5,2])
+        vals, freqs = Frequencies(uniqmis)
+        self.assertListEqual(vals.tolist(), [1, 2, 3, 4])
+        self.assertListEqual(freqs.round(8).tolist(), [2,7,3,1])
+
     def testProportions(self):
         vals, props = Proportions(uniques)
         self.assertListEqual(vals.tolist(), [1, 2, 3, 4])
@@ -67,7 +75,15 @@ class univariateTest(unittest.TestCase):
         vals, props = Proportions(uniqmis)
         self.assertListEqual(vals.tolist(), [1, 2, 3, 4])
         self.assertListEqual(props.round(8).tolist(), [0.15384615, 0.53846154, 0.23076923, 0.07692308])
-                             
+
+    def testPercentages(self):
+        vals, percs = Percentages(uniques)
+        self.assertListEqual(vals.tolist(), [1, 2, 3, 4])
+        self.assertListEqual(percs.round(2).tolist(), [12.5, 43.75, 31.25, 12.5])
+        vals, percs = Percentages(uniqmis)
+        self.assertListEqual(vals.tolist(), [1, 2, 3, 4])
+        self.assertListEqual(percs.round(6).tolist(), [15.384615, 53.846154, 23.076923, 7.692308])
+
     def testMean(self):
         self.assertAlmostEqual(Mean(intvector),9.125, places=3)
         self.assertAlmostEqual(Mean(intmatrix),9.875, places=3)

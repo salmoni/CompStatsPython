@@ -185,8 +185,9 @@ def Proportions(data):
     """
     "proportions", "proportion"
     """
-    un, nu = UniqueVals(data)
+    un, nu = Frequencies(data)
     return un, nu / numpy.ma.sum(nu)
+    #CumPercent(numbers) / 100.0
 
 def Percentages(data):
     un, nu = Proportions(data)
@@ -246,7 +247,7 @@ def Frequencies(data):
     "frequencies", "frequency", "freq"
     """
     uniques, numbers = UniqueVals(data)
-    return uniques, numbers, CumPercent(numbers) / 100.0 #, nu, nu / CumPercent(nu)
+    return uniques, numbers #, nu, nu / CumPercent(nu)
 
 def TrimmedData(data, Lsplit, Usplit = None):
     if Usplit == None:
