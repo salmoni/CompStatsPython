@@ -68,6 +68,7 @@ FiveNumber - Tukey's five number sumnumpy.mary (minimum, lower quartile, median,
 OutliersSQR - returns two arrays, one of outliers defined by 1.5 * IQR, and the other without these outliers
 
 """
+import math
 import numpy 
 import numpy.ma
 
@@ -249,15 +250,17 @@ def Frequencies(data):
     uniques, numbers = UniqueVals(data)
     return uniques, numbers #, nu, nu / CumPercent(nu)
 
-def TrimmedData(data, Lsplit, Usplit = None):
+def TrimmedData(Data, Lsplit, Usplit = None):
     if Usplit == None:
         Usplit = Lsplit
-    data = numpy.ma.sort(data)
-    LB = MidstepQuantile(data, Lsplit)
-    UB = MidstepQuantile(data, 1.0-Usplit)
-    data = numpy.ma.compress(numpy.ma.greater(data, LB), data)
-    data = numpy.ma.compress(numpy.ma.less(data, UB), data)
-    return data
+    Data = numpy.ma.sort(Data)
+    LB = Q7(Data, Lsplit)
+    UB = Q7(Data, 1.0-Usplit)
+    Data = Data[numpy.ma.greater(Data, LB)]
+    Data = Data[numpy.ma.less(Data,UB)]
+    #data = numpy.ma.compress(numpy.ma.greater(data, LB), data)
+    #data = numpy.ma.compress(numpy.ma.less(data, UB), data)
+    return Data
 
 def TrimmedMean(data, trim):
     """
@@ -268,7 +271,7 @@ def TrimmedMean(data, trim):
         return None
     elif "int" in t:
         split = (trim / 200.0)
-        data = TrimmedData(data, split, split)
+        data = TrimmedData(data, split)
         return int(numpy.ma.average(data))
     elif 'float' in t:
         split = (trim / 200.0)
@@ -326,24 +329,18 @@ def Mode(data):
     """
     "mode", "most common"
     """
-    # get list of values
-    sa = set(data)
-    nums = []
-    # gather number of occurences of each
-    for i in sa:
-        nums.append(len(compress(i == data, data)))
-    # get maximum number of occurences
-    nums = array(nums)
-    modes = Maximum(nums)
-    ind = modes == data
-    return data[ind], float(modes/numpy.ma.count(data))
+    # get list of values and frequencies
+    vals, nums = Frequencies(data)
+    maxes = numpy.ma.max(nums)
+    idxs = data[numpy.ma.equal(nums, maxes)]
+    return maxes, idxs
 
 def Moment(data, m):
     t = str(data.dtype.type)
     if 'string' in t:
         return 
     elif 'float' in t or 'int' in t:
-        return float(numpy.ma.sum((data - numpy.ma.average(data)) ** m) / numpy.ma.count(data))
+        return (Sum((data - numpy.ma.average(data)) ** m) / Count(data))
     else:
         return 
 
@@ -611,14 +608,14 @@ def ConfidenceIntervals(data, p=0.95):
     ub = m + diff
     return lb, ub
 
-def MAD(data):
+def MAD(data, constant = 1.4826):
     """
     "median absolute deviation", "mad"
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
         med = Median(data)
-        return float(Median(data - med))
+        return Median(abs((data - med))) * constant
     else:
         return
 
@@ -628,10 +625,7 @@ def GeometricMean(data):
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
-        try:
-            return float(numpy.math.sqrt(numpy.math.sqrt(CumProduct(data))))
-        except:
-            return None
+        return math.exp(Mean(numpy.ma.log(data))) 
     else:
         return
 
@@ -643,7 +637,7 @@ def HarmonicMean(data):
     if 'int' in t or 'float' in t:
         val = numpy.ma.sum(1.0-data)
         if val != 0.0:
-            val = numpy.ma.count(data)/val
+            val = Count(data)/val
         return float(val)
     else:
         return

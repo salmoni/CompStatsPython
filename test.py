@@ -91,6 +91,26 @@ class univariateTest(unittest.TestCase):
         self.assertAlmostEqual(Mean(fltmisvec),11.26233, places=5)
         self.assertAlmostEqual(Mean(fltmismat),11.12895, places=5)
 
+    def testTrimmedMean(self):
+        self.assertAlmostEqual(TrimmedMean(intvector, trim=0.5),7.5, places=1)
+        self.assertAlmostEqual(TrimmedMean(intmisvec, trim=0.5),14.0, places=0)
+        self.assertAlmostEqual(TrimmedMean(fltvector, trim=0.5),7.247, places=3)
+        self.assertAlmostEqual(TrimmedMean(fltmisvec, trim=0.5),13.9785, places=4)
+
+    def testMedian(self):
+        self.assertAlmostEqual(Median(intvector),7.5, places=1)
+        self.assertAlmostEqual(Median(intmatrix),14, places=0)
+        self.assertAlmostEqual(Median(fltvector),7.247, places=3)
+        self.assertAlmostEqual(Median(fltmisvec),13,9785, places=4)
+
+    def testMode(self):
+        maxes, idx = Mode(uniques)
+        self.assertAlmostEqual(maxes,7, places=0)
+        self.assertListEqual(idx.tolist(), [2])
+        maxes, idx = Mode(uniqmis)
+        self.assertAlmostEqual(maxes,7, places=0)
+        self.assertListEqual(idx.tolist(), [2])
+
     def testSampVar(self):
         self.assertAlmostEqual(SampVar(intvector),67.55357, places=5)
         #self.assertAlmostEqual(SampVar(intmatrix),, places=6)
@@ -158,6 +178,18 @@ class univariateTest(unittest.TestCase):
     def testQ9(self):
         self.assertAlmostEqual(Q9(longvec, 0.25), 3.088938, places=5)
         self.assertAlmostEqual(Q9(longvec, 0.75), 7.462, places=3)
+
+    def testMAD(self):
+        self.assertAlmostEqual(MAD(intvector), 9.6369, places=4)
+        self.assertAlmostEqual(MAD(intmisvec), 7.413, places=3)
+        self.assertAlmostEqual(MAD(fltvector), 9.197309, places=6)
+        self.assertAlmostEqual(MAD(fltmisvec), 7.096465, places=6)
+
+    def testGeometricMean(self):
+        self.assertAlmostEqual(GeometricMean(intvector), 7.009916, places=6)
+        self.assertAlmostEqual(GeometricMean(intmisvec), 10.675, places=3)
+        self.assertAlmostEqual(GeometricMean(fltvector), 4.769588, places=6)
+        self.assertAlmostEqual(GeometricMean(fltmisvec), 6.07197, places=5)
 
 
 if __name__ == '__main__':
