@@ -10,7 +10,7 @@ from AllRoutines import *
 
 """
 Vsort
-Msort
+Msort7
 CalculateRanks
 GetSSCP_M
 GetVarsCovars_M
@@ -185,12 +185,36 @@ class univariateTest(unittest.TestCase):
         self.assertAlmostEqual(MAD(fltvector), 9.197309, places=6)
         self.assertAlmostEqual(MAD(fltmisvec), 7.096465, places=6)
 
+    def testMoment(self):
+        self.assertAlmostEqual(Moment(intvector,2), 59.10938, places=4)
+        self.assertAlmostEqual(Moment(intmisvec,4), 5245.074, places=3)
+        self.assertAlmostEqual(Moment(fltvector,1), -6.661338e-16, places=6)
+        self.assertAlmostEqual(Moment(fltmisvec,3), -197.1184, places=4)
+
     def testGeometricMean(self):
         self.assertAlmostEqual(GeometricMean(intvector), 7.009916, places=6)
         self.assertAlmostEqual(GeometricMean(intmisvec), 10.675, places=3)
         self.assertAlmostEqual(GeometricMean(fltvector), 4.769588, places=6)
         self.assertAlmostEqual(GeometricMean(fltmisvec), 6.07197, places=5)
 
+    def testWinsorisedMean(self):
+        self.assertAlmostEqual(WinsorisedMean(intvector, 0.1), 9.3, places=1)
+        self.assertAlmostEqual(WinsorisedMean(intmisvec, 0.1), 11.5, places=6)
+        self.assertAlmostEqual(WinsorisedMean(fltvector, 0.1), 9.092438, places=5)
+        self.assertAlmostEqual(WinsorisedMean(fltmisvec, 0.1), 11.31692, places=4)
+
+    def testSkewness(self):
+        self.assertAlmostEqual(Skewness(intvector), 0.1544885, places=7)
+        self.assertAlmostEqual(Skewness(intmisvec), -0.4628102, places=7)
+        self.assertAlmostEqual(Skewness(fltvector), 0.1683335, places=7)
+        self.assertAlmostEqual(Skewness(fltmisvec), -0.447436, places=6)
+
+
+    def testKurtosis(self):
+        self.assertAlmostEqual(Kurtosis(intvector), 1.245587, places=6)
+        self.assertAlmostEqual(Kurtosis(intmisvec), 1.495486, places=6)
+        self.assertAlmostEqual(Kurtosis(fltvector), 1.22172, places=5)
+        self.assertAlmostEqual(Kurtosis(fltmisvec), 1.453783, places=6)
 
 if __name__ == '__main__':
     unittest.main()

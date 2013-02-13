@@ -256,8 +256,8 @@ def TrimmedData(Data, Lsplit, Usplit = None):
     Data = numpy.ma.sort(Data)
     LB = Q7(Data, Lsplit)
     UB = Q7(Data, 1.0-Usplit)
-    Data = Data[numpy.ma.greater(Data, LB)]
-    Data = Data[numpy.ma.less(Data,UB)]
+    Data = Data[numpy.ma.greater_equal(Data, LB)]
+    Data = Data[numpy.ma.less_equal(Data,UB)]
     #data = numpy.ma.compress(numpy.ma.greater(data, LB), data)
     #data = numpy.ma.compress(numpy.ma.less(data, UB), data)
     return Data
@@ -294,6 +294,32 @@ def BiTrimmedMean(data, Ltrim, Utrim):
             return float(numpy.ma.average(data))
         else:
             return None
+
+def WinsorisedMean(Data, trim):
+    """
+    Winsorised mean - like a trimmed mean but replace values that would-be
+    trimmed by the nearest value not trimmed.
+    """
+    t = str(Data.dtype.type)
+    if 'string' in t:
+        return None
+    else:
+        try:
+            if trim > 0.5:
+                return None
+            else:
+                Data = numpy.ma.sort(Data)
+                LB = Q7(Data, trim)
+                UB = Q7(Data, 1.0-trim)
+                idx_lower = numpy.ma.less_equal(Data, LB)
+                idx_upper = numpy.ma.greater_equal(Data, UB)
+                val_min = Data[-idx_lower][0]
+                val_max = Data[-idx_upper][-1]
+                Data[idx_lower] = val_min
+                Data[idx_upper] = val_max
+                return Mean(Data)
+        except:
+            return
 
 def Mean(data):
     """
@@ -635,10 +661,10 @@ def HarmonicMean(data):
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
-        val = numpy.ma.sum(1.0-data)
-        if val != 0.0:
-            val = Count(data)/val
-        return float(val)
+        try:
+            return 1.0/Mean(1.0/data)
+        except DivideByZeroError:
+            return None
     else:
         return
 
@@ -677,7 +703,7 @@ def Kurtosis(data):
         m4 = Moment(data, 4)
         m22 = (Moment(data, 2) ** 2)
         try:
-            return float((m4 / float(m22)) - 3.0)
+            return float((m4 / float(m22)))
         except:
             return None
     else:
