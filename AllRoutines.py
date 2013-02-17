@@ -58,7 +58,7 @@ ConfidenceIntervals - returns the confidence intervals
 numpy.maD - Median absolute deviation
 GeometricMean - the geometric mean
 HarmonicMean - the harmonic mean
-MSSD - mean of subsequent squared deviations
+MSSD - mean square of successive differences
 Skewness - returns the skewness
 Kurtosis - returns the kurtosis
 StandardScore - transforms a vector into a standard (ie, z-) score
@@ -251,15 +251,14 @@ def Frequencies(data):
     return uniques, numbers #, nu, nu / CumPercent(nu)
 
 def TrimmedData(Data, Lsplit, Usplit = None):
-    if Usplit == None:
-        Usplit = Lsplit
+    if (Usplit == None) or (Usplit < 0.5):
+        Usplit = 1.0 - Lsplit
     Data = numpy.ma.sort(Data)
     LB = Q7(Data, Lsplit)
-    UB = Q7(Data, 1.0-Usplit)
-    Data = Data[numpy.ma.greater_equal(Data, LB)]
-    Data = Data[numpy.ma.less_equal(Data,UB)]
-    #data = numpy.ma.compress(numpy.ma.greater(data, LB), data)
-    #data = numpy.ma.compress(numpy.ma.less(data, UB), data)
+    UB = Q7(Data, Usplit)
+    print LB, UB
+    Data = Data[numpy.ma.greater(Data, LB)]
+    Data = Data[numpy.ma.less(Data,UB)]
     return Data
 
 def TrimmedMean(data, trim):
@@ -269,16 +268,9 @@ def TrimmedMean(data, trim):
     t = str(data.dtype.type)
     if 'string' in t:
         return None
-    elif "int" in t:
-        split = (trim / 200.0)
-        data = TrimmedData(data, split)
-        return int(numpy.ma.average(data))
-    elif 'float' in t:
-        split = (trim / 200.0)
-        data = TrimmedData(data, split, split)
-        return float(numpy.ma.average(data))
-    else: 
-        return None
+    else:
+        data = TrimmedData(data, trim)
+        return float(Mean(data))
 
 def BiTrimmedMean(data, Ltrim, Utrim):
     t = str(data.dtype.type)
@@ -297,8 +289,7 @@ def BiTrimmedMean(data, Ltrim, Utrim):
 
 def WinsorisedMean(Data, trim):
     """
-    Winsorised mean - like a trimmed mean but replace values that would-be
-    trimmed by the nearest value not trimmed.
+    "Winsorised mean", "winsorisedmean"
     """
     t = str(Data.dtype.type)
     if 'string' in t:
@@ -311,12 +302,12 @@ def WinsorisedMean(Data, trim):
                 Data = numpy.ma.sort(Data)
                 LB = Q7(Data, trim)
                 UB = Q7(Data, 1.0-trim)
-                idx_lower = numpy.ma.less_equal(Data, LB)
-                idx_upper = numpy.ma.greater_equal(Data, UB)
+                idx_lower = numpy.ma.less(Data, LB)
+                idx_upper = numpy.ma.greater(Data, UB)
                 val_min = Data[-idx_lower][0]
                 val_max = Data[-idx_upper][-1]
-                Data[idx_lower] = val_min
-                Data[idx_upper] = val_max
+                Data[idx_lower] = LB 
+                Data[idx_upper] = UB
                 return Mean(Data)
         except:
             return
@@ -662,13 +653,19 @@ def HarmonicMean(data):
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
         try:
-            return 1.0/Mean(1.0/data)
-        except DivideByZeroError:
+            div1 = numpy.ma.divide(1.0, data)
+            m1 = Mean(div1)
+            hm = numpy.ma.divide(1.0, m1)
+            return hm 
+        except ZeroDivisionError:
             return None
     else:
         return
 
 def MSSD(data):
+    """
+    Mean square of successive differences
+    """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
         val = (data[1:] - data[0:-1]) ** 2
