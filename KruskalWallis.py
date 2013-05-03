@@ -1,3 +1,5 @@
+import AllRoutines
+
 def KruskalWallis ( data ):
 	"""
 	Kruskal-Wallis test for 2+ samples of independent nonparametric data.\n
@@ -5,8 +7,8 @@ def KruskalWallis ( data ):
 	"""
 	k = len ( data )
 	df = k - 1
-	N = count ( data )
-	ns = count ( data , 1 )
+	N = AllRoutines.Count ( data )
+	ns = AllRoutines.Count ( data , 1 )
 	ranks = ranked ( data )
 	Rj = sum ( transpose ( ranks ) )
 	RjM = average ( transpose ( ranks ) )
@@ -19,3 +21,6 @@ def KruskalWallis ( data ):
 	den = 1 - ( ( sum ( nu ** 2 ) - nu ) ) / float ( ( N ** 3 ) - N )
 	KW = num / float ( den )
 	return KW
+
+def GetTies(data):
+    s

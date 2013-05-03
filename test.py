@@ -7,7 +7,7 @@ Unit test for stats routines
 import unittest, numpy
 from Data import *
 from AllRoutines import *
-
+import KruskalWallis
 """
 Vsort
 Msort7
@@ -365,6 +365,13 @@ class univariateTest(unittest.TestCase):
 
     def testKurtosis4(self):
         self.assertAlmostEqual(Kurtosis(fltmisvec), 1.453783, places=6)
+
+    def testKruskal(self):
+        data = numpy.array(([longvec[:10],longvec[10:]]))
+        KW = KruskalWallis.KruskalWallis(data)
+        self.assertAlmostEqual(KW, 3.5714, places=4)
+
+    
 
 if __name__ == '__main__':
     unittest.main()
