@@ -10,7 +10,9 @@ add_3_ble(X,Y) :- Y is (X + 3) * 2.
 % leng - length of a list (top level only)
 accLen([_|T],A,L) :- Anew is A+1, accLen(T, Anew, L).
 accLen([],A,A).
-leng(List, Length) :- accLen(List, 0, Length).
+leng(List, Length) :-
+	flatten(List, FlatList),
+	accLen(FlatList, 0, Length).
 
 % Find number of all atoms in a list
 %accLen(
@@ -20,7 +22,7 @@ leng(List, Length) :- accLen(List, 0, Length).
 accMax([H|T],A,Max) :-
     H > A,
     accMax(T,H,Max).
-accMax([H|T],A,Max) :- 
+accMax([H|T],A,Max) :-
     H =< A,
     accMax(T,A,Max).
 accMax([],A,A).
@@ -34,12 +36,17 @@ accMin([H|T],A,Min) :-
     accMin(T,A,Min).
 accMin([],A,A).
 
-% Get the sum a list
+% Get the sum a list (only works with 1-D lists)
 accSumNums([H|T], Acc, Sum) :-
     NewAcc is Acc + H,
     accSumNums(T, NewAcc, Sum).
 accSumNums([],Acc,Acc).
-sumNums(List, Sum) :- accSumNums(List,0,Sum).
+sumNums(List, Sum) :-
+	flatten(List, FlatList),
+	accSumNums(FlatList,0,Sum).
+
+aSumNums([], 0) :- !.
+aSumNums([H|T], Sum) :- aSumNums(T, S), Sum is H + S.
 
 % Get the mean of a list
 meanNums(List, Mean) :-
@@ -57,9 +64,10 @@ accSumSquares([H|T], Mean, Acc, SumSquares) :-
     NewAcc is Acc + SqDeviation,
     accSumSquares(T, Mean, NewAcc, SumSquares).
 accSumSquares([], _, Acc, Acc).
-sumSquaredNums(List, SumSquares) :- 
-    meanNums(List, Mean), 
-    accSumSquares(List, Mean, 0, SumSquares).
+sumSquaredNums(List, SumSquares) :-
+	flatten(List, FlatList),
+	meanNums(List, Mean),
+	accSumSquares(FlatList, Mean, 0, SumSquares).
 
 % Variance (sample)
 sampleVariance(List, SampleVariance) :-
@@ -89,9 +97,6 @@ standardError(List, StandardError) :-
     Den is sqrt(Length),
     sampleStdDev(List, SampleStdDev),
     StandardError is SampleStdDev / Den.
-
-% length flattened
-% flatten list into vector
 
 
 
