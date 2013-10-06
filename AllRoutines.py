@@ -74,16 +74,25 @@ import numpy.ma
 
 
 def Vsort(data):
+    """
+    Sort a vector
+    """
     # check that 'data' is a vector
     return numpy.ma.sort(data)
 
 def Msort(data):
+    """
+    Sort a matrix
+    """
     # check that 'data' is a numpy.matrix
     dims = numpy.ma.shape(data)
     length = dims[0] * dims[1]
     return numpy.ma.reshape(numpy.ma.sort(numpy.ma.reshape(data, length)), dims)
 
 def UniqueVals(data):
+    """
+    All unique values
+    """
     data = numpy.ma.array(data)
     uniques = numpy.ma.sort(list(set(data.compressed())))
     numbers = numpy.zeros((len(uniques)))
@@ -93,6 +102,9 @@ def UniqueVals(data):
     return uniques, numbers
 
 def CalculateRanks(data, start = 1):
+    """
+    Calculate ranks
+    """
     data = numpy.ma.array(data)
     vals = sort(list(set(data.compressed())))
     rank = start - 0.5
@@ -106,34 +118,49 @@ def CalculateRanks(data, start = 1):
     return numpy.ma.numpy.masked_where(numpy.ma.equal(ranks, 0), ranks)
 
 def GetSSCP_M(data):
+    """
+    Sum of squares and cross-products
+    """
     Xd = data - numpy.ma.average(data)
     Xdp = numpy.ma.transpose(Xd)
     return numpy.ma.dot(Xdp, Xd)
 
 def GetVarsCovars_M(data):
+    """
+    Variances and covariances matrix
+    """
     SSCP = GetSSCP_M(data)
     return SSCP / len(data[1]) # is the len(data[1]) correct?
 
 def GetVariances(data):
+    """
+    Variances
+    """
     return numpy.ma.diagonal(GetVarsCovars_M(data))
 
 def GetStdDevs(data):
+    """
+    "Standard deviations
+    """
     return numpy.ma.sqrt(GetVariances(data))
     
 def GetCorrelationnMatrix(data):
+    """
+    Correlations
+    """
     VCV = GetVarsCovars_M(data)
     return VCV / numpy.ma.sqrt(numpy.ma.diagonal(VCV))
 
 def Count(data):
     """
-    "count", "N", "number"
+    Frequencies
     """
     data = numpy.ma.array(data)
     return int(numpy.ma.count(data))
 
 def Sum(data):
     """
-    "sum", "total"
+    Sum
     """
     t = str(data.dtype.type)
     if 'string' in t:
@@ -147,7 +174,7 @@ def Sum(data):
 
 def Minimum(data):
     """
-    "minimum", "min", "lowest", "snumpy.mallest", "least"
+    Minimum
     """
     t = str(data.dtype.type)
     if 'string' in t:
@@ -161,7 +188,7 @@ def Minimum(data):
 
 def Maximum(data):
     """
-    "maximum", "max", "highest", "largest", "biggest"
+    Maximum
     """
     t = str(data.dtype.type)
     if 'string' in t:
@@ -174,9 +201,15 @@ def Maximum(data):
         return None
 
 def Range(data):
+    """
+    Range
+    """
     return Maximum(data) - Minimum(data)
 
 def Midrange(data):
+    """
+    Mid-range
+    """
     maximum = Maximum(data)
     minimum = Minimum(data)
     midrange = (maximum + minimum) / 2.0
@@ -184,20 +217,22 @@ def Midrange(data):
 
 def Proportions(data):
     """
-    "proportions", "proportion"
+    Proportions
     """
     un, nu = Frequencies(data)
     return un, nu / numpy.ma.sum(nu)
     #CumPercent(numbers) / 100.0
 
 def Percentages(data):
+    """
+    Percentages
+    """
     un, nu = Proportions(data)
     return un, nu * 100
 
 def RelFreqMode(data):
     """
-    "relative frequency of mode"
-    "relativefrequencymode", "relative frequency of the mode", 
+    Relative frequency of mode
     """
     vals, nums = UniqueVals(data)
     m = Maximum(nums)
@@ -206,11 +241,14 @@ def RelFreqMode(data):
     return modes, (m / float(total)) * 100.0
     
 def sum(data):
+    """
+    Sum
+    """
     return data.sum()
 
 def CumSum(data):
     """
-    "cumulative sum", "cumsum"
+    Cumulative sum
     """
     t = str(data.dtype.type)
     if 'string' in t:
@@ -224,7 +262,7 @@ def CumSum(data):
 
 def CumProduct(data):
     """
-    "cumulative product", "cumproduct"
+    Cumulative product
     """
     t = str(data.dtype.type)
     if 'string' in t:
@@ -238,19 +276,22 @@ def CumProduct(data):
 
 def CumPercent(data):
     """
-    "cumulative percent", "cumpercent", "cumulative percentage"
+    Cumulative percent
     """
     # assumes numbers of frequencies are sent
     return data / float(numpy.ma.sum(data)) * 100.0
 
 def Frequencies(data):
     """
-    "frequencies", "frequency", "freq"
+    Frequencies
     """
     uniques, numbers = UniqueVals(data)
     return uniques, numbers #, nu, nu / CumPercent(nu)
 
 def TrimmedData(Data, Lsplit, Usplit = None):
+    """
+    Trim data
+    """
     if (Usplit == None) or (Usplit < 0.5):
         Usplit = 1.0 - Lsplit
     Data = numpy.ma.sort(Data)
@@ -263,7 +304,7 @@ def TrimmedData(Data, Lsplit, Usplit = None):
 
 def TrimmedMean(data, trim):
     """
-    "trimmed mean", "trimmean", "trimmedmean"
+    Trimmed mean
     """
     t = str(data.dtype.type)
     if 'string' in t:
@@ -273,6 +314,9 @@ def TrimmedMean(data, trim):
         return float(Mean(data))
 
 def BiTrimmedMean(data, Ltrim, Utrim):
+    """
+    Bi-trimmed mean
+    """
     t = str(data.dtype.type)
     if 'string' in t:
         return None
@@ -289,7 +333,7 @@ def BiTrimmedMean(data, Ltrim, Utrim):
 
 def WinsorisedMean(Data, trim):
     """
-    "Winsorised mean", "winsorisedmean"
+    Winsorised mean
     """
     t = str(Data.dtype.type)
     if 'string' in t:
@@ -314,7 +358,7 @@ def WinsorisedMean(Data, trim):
 
 def Mean(data):
     """
-    "mean", "average", "arithmetic mean"
+    Mean
     """
     t = str(data.dtype.type)
     if 'string' in t:
@@ -327,7 +371,7 @@ def Mean(data):
 
 def Median(data):
     """
-    "median"
+    Median
     """
     t = str(data.dtype.type)
     if 'string' in t:
@@ -344,7 +388,7 @@ def Median(data):
 
 def Mode(data):
     """
-    "mode", "most common"
+    Mode
     """
     # get list of values and frequencies
     vals, nums = Frequencies(data)
@@ -353,6 +397,9 @@ def Mode(data):
     return maxes, idxs
 
 def Moment(data, m):
+    """
+    Moment
+    """
     t = str(data.dtype.type)
     if 'string' in t:
         return 
@@ -362,6 +409,9 @@ def Moment(data, m):
         return 
 
 def TukeyQuartiles(data):
+    """
+    Tukey's quartiles
+    """
     data = numpy.ma.sort(data)
     med = Median(data)
     firstQ = numpy.ma.compress(numpy.ma.less_equal(data, med), data)
@@ -369,6 +419,9 @@ def TukeyQuartiles(data):
     return Median(data[firstQ]), Median(data[thirdQ])
 
 def MooreQuartiles(data):
+    """
+    Moore & McCabe's quartiles
+    """
     data = numpy.ma.sort(data)
     med = Median(data)
     firstQ = numpy.ma.compress(numpy.ma.less(data, med), data)
@@ -379,6 +432,9 @@ def QuantileDef(data, k, a):
     return ((1-a)*data[k-1])+(a*data[k])
 
 def SPQuantile(data, alpha):
+    """
+    SPSS quantile
+    """
     data = numpy.ma.sort(data)
     n = numpy.ma.count(data)
     k = int(1+(alpha*(n-1)))
@@ -387,6 +443,9 @@ def SPQuantile(data, alpha):
     return Q
 
 def TradQuantile(data, alpha):
+    """
+    Traditional quantiles
+    """
     data = numpy.ma.sort(data)
     n = numpy.ma.count(data)
     k = int(alpha * (n+1))
@@ -395,6 +454,9 @@ def TradQuantile(data, alpha):
     return Q
 
 def MidstepQuantile(data, alpha):
+    """
+    Mid-step quantiles
+    """
     # has limits up to alpha < 0.98 and alpha > 0.02
     data = numpy.ma.sort(data)
     n = numpy.ma.count(data)
@@ -404,6 +466,9 @@ def MidstepQuantile(data, alpha):
     return Q
 
 def Q1(data, alpha):
+    """
+    Quantile 1 from Hyndmand & Fan
+    """
     n = numpy.ma.count(data)
     data = numpy.ma.sort(data)
     k = int(alpha * n)
@@ -416,6 +481,9 @@ def Q1(data, alpha):
     return Q
 
 def Q2(data, alpha):
+    """
+    Quantile 2 from Hyndmand & Fan
+    """
     n = numpy.ma.count(data)
     data = numpy.ma.sort(data)
     k = int(alpha * n)
@@ -428,6 +496,9 @@ def Q2(data, alpha):
     return Q
 
 def Q3(data, alpha):
+    """
+    Quantile 3 from Hyndmand & Fan
+    """
     n = numpy.ma.count(data)
     data = numpy.ma.sort(data)
     m = -0.5
@@ -440,6 +511,9 @@ def Q3(data, alpha):
     return Q
 
 def Q4(data, alpha):
+    """
+    Quantile 4 from Hyndmand & Fan
+    """
     n = numpy.ma.count(data)
     data = numpy.ma.sort(data)
     m = 0.0
@@ -449,6 +523,9 @@ def Q4(data, alpha):
     return Q
 
 def Q5(data, alpha):
+    """
+    Quantile 5 from Hyndmand & Fan
+    """
     n = numpy.ma.count(data)
     data = numpy.ma.sort(data)
     m = 0.5
@@ -458,6 +535,9 @@ def Q5(data, alpha):
     return Q
 
 def Q6(data, alpha):
+    """
+    Quantile 6 from Hyndmand & Fan
+    """
     n = numpy.ma.count(data)
     data = numpy.ma.sort(data)
     m = alpha
@@ -467,6 +547,9 @@ def Q6(data, alpha):
     return Q
 
 def Q7(data, alpha):
+    """
+    Quantile 7 from Hyndmand & Fan
+    """
     n = numpy.ma.count(data)
     data = numpy.ma.sort(data)
     m = 1.0 - alpha
@@ -476,6 +559,9 @@ def Q7(data, alpha):
     return Q
 
 def Q8(data, alpha):
+    """
+    Quantile 8 from Hyndmand & Fan
+    """
     n = numpy.ma.count(data)
     data = numpy.ma.sort(data)
     m = (alpha + 1) / 3.0
@@ -485,6 +571,9 @@ def Q8(data, alpha):
     return Q
 
 def Q9(data, alpha):
+    """
+    Quantile 9 from Hyndmand & Fan
+    """
     n = numpy.ma.count(data)
     data = numpy.ma.sort(data)
     m = (0.25 * alpha) + (3 / 8.0)
@@ -494,6 +583,9 @@ def Q9(data, alpha):
     return Q
 
 def Quartiles(data):
+    """
+    Quartiles (quantile 8 from Hyndman & Fan)
+    """
     q1 = Q8(data, 0.25)
     q2 = Q8(data, 0.50)
     q3 = Q8(data, 0.75)
@@ -501,7 +593,7 @@ def Quartiles(data):
 
 def InterquartileRange(data, Qtype = "8"):
     """
-    "interquartile range", "interquartilerange", "iqr"
+    Interquartile range
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -513,7 +605,7 @@ def InterquartileRange(data, Qtype = "8"):
 
 def SS(data):
     """
-    "sum of squares", "ss", "sumofsquares", "SS"
+    Sum of squares
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -523,7 +615,7 @@ def SS(data):
 
 def SSDevs(data):
     """
-    "ssdevs", "sum of squared deviations"
+    Sum of squared deviations
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -537,7 +629,7 @@ def SSDevs(data):
 
 def SampVar(data):
     """
-    "variance", "sampvar", "sample variance", "var"
+    Sample variance
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -550,7 +642,7 @@ def SampVar(data):
 
 def PopVar(data):
     """
-    "population variance", "popvar"
+    Population variance
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -563,8 +655,7 @@ def PopVar(data):
 
 def SampStdDev(data):
     """
-    "sample standard deviation","sampstddev", "sample stddev", "sampstdev", 
-    "sample stdev", "stdev", "stddev", "sd", "standard deviation"
+    Sample standard deviation
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -577,8 +668,7 @@ def SampStdDev(data):
 
 def PopStdDev(data):
     """
-    "population standard deviation",
-    "popstddev", "population stddev", "population stdev"
+    Population standard deviation
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -591,7 +681,7 @@ def PopStdDev(data):
 
 def CoeffVar(data):
     """
-    "coefficient of variation", "coeffvar", "coeff var"
+    Coefficient of variation
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -604,7 +694,7 @@ def CoeffVar(data):
 
 def StdErr(data):
     """
-    "standard error", "stderr", "se"
+    Standard error
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -616,6 +706,9 @@ def StdErr(data):
         return
 
 def ConfidenceIntervals(data, p=0.95):
+    """
+    Confidence intervals
+    """
     p = 1.0 - p
     n = numpy.ma.count(data)
     m = numpy.ma.average(data)
@@ -627,7 +720,7 @@ def ConfidenceIntervals(data, p=0.95):
 
 def MAD(data, constant = 1.4826):
     """
-    "median absolute deviation", "mad"
+    Median absolute deviation
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -638,7 +731,7 @@ def MAD(data, constant = 1.4826):
 
 def GeometricMean(data):
     """
-    "geometric mean", "geometricmean", "geomean"
+    Geometric mean
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -648,7 +741,7 @@ def GeometricMean(data):
 
 def HarmonicMean(data):
     """
-    "harmonic mean", "harmonicmean", "harmmean"
+    Harmonic mean
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -678,7 +771,7 @@ def MSSD(data):
     
 def Skewness(data):
     """
-    "skewness", "skew"
+    Skewness
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -693,7 +786,7 @@ def Skewness(data):
 
 def Kurtosis(data):
     """
-    "kurtosis", "kurt"
+    Kurtosis
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
@@ -707,6 +800,9 @@ def Kurtosis(data):
         return
 
 def StandardScore(data):
+    """
+    Standard score
+    """
     av = numpy.ma.average(data)
     sd = SampStdDev(data)
     try:
@@ -751,6 +847,9 @@ def EffectSize(data):
         return vals
 
 def FiveNumber(data):
+    """
+    Five number summary
+    """
     mn = Minimum(data)
     mx = Maximum(data)
     med = Median(data)
@@ -758,6 +857,9 @@ def FiveNumber(data):
     return mn, quartiles[0], med, quartiles[1], mx
 
 def OutliersIQR(data):
+    """
+    Outliers (via interquartile range)
+    """
     IQR = InterquartileRange(data)
     # returns outliers defined as those outside 1.5 * IQR
     # note - this is not finished - needs the 1.5 and the centre point (mean)
