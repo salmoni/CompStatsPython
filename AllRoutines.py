@@ -74,16 +74,10 @@ import numpy.ma
 
 
 def Vsort(data):
-    """
-    Sort a vector
-    """
     # check that 'data' is a vector
     return numpy.ma.sort(data)
 
 def Msort(data):
-    """
-    Sort a matrix
-    """
     # check that 'data' is a numpy.matrix
     dims = numpy.ma.shape(data)
     length = dims[0] * dims[1]
@@ -102,9 +96,6 @@ def UniqueVals(data):
     return uniques, numbers
 
 def CalculateRanks(data, start = 1):
-    """
-    Calculate ranks
-    """
     data = numpy.ma.array(data)
     vals = sort(list(set(data.compressed())))
     rank = start - 0.5
@@ -118,36 +109,21 @@ def CalculateRanks(data, start = 1):
     return numpy.ma.numpy.masked_where(numpy.ma.equal(ranks, 0), ranks)
 
 def GetSSCP_M(data):
-    """
-    Sum of squares and cross-products
-    """
     Xd = data - numpy.ma.average(data)
     Xdp = numpy.ma.transpose(Xd)
     return numpy.ma.dot(Xdp, Xd)
 
 def GetVarsCovars_M(data):
-    """
-    Variances and covariances matrix
-    """
     SSCP = GetSSCP_M(data)
     return SSCP / len(data[1]) # is the len(data[1]) correct?
 
 def GetVariances(data):
-    """
-    Variances
-    """
     return numpy.ma.diagonal(GetVarsCovars_M(data))
 
 def GetStdDevs(data):
-    """
-    "Standard deviations
-    """
     return numpy.ma.sqrt(GetVariances(data))
     
 def GetCorrelationnMatrix(data):
-    """
-    Correlations
-    """
     VCV = GetVarsCovars_M(data)
     return VCV / numpy.ma.sqrt(numpy.ma.diagonal(VCV))
 
