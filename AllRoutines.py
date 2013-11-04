@@ -50,7 +50,31 @@ SS - sum of squares
 SSDevs - sum of squared deviations from the mean
 SampVar - sample variance
 PopVar - population variance
-SampStdDev - sample standard deviation
+SampStdDev - sample standardef IndexMatches(value, data):
+    indices = []
+    for idx, item in enumerate(data):
+        if value == item:
+            indices.append(idx)
+    return indices
+
+def UniqueVals(data):
+    """
+    Returns unique values + frequencies
+    """
+    try:
+        uniques = list(set(data))
+    except TypeError:
+        data = [data]
+        uniques = data
+    length = len(uniques)
+    freqs = []
+    # now find frequencies
+    for item in uniques:
+        nummatches = IndexMatches(item, data)
+        freqs.append(Count(numpy.array(nummatches)))
+    return uniques, freqs
+
+d deviation
 PopStdDev - population standard deviation
 StdErr - standard error
 CoeffVar - coefficient of variation
@@ -83,17 +107,53 @@ def Msort(data):
     length = dims[0] * dims[1]
     return numpy.ma.reshape(numpy.ma.sort(numpy.ma.reshape(data, length)), dims)
 
+def IndexMatches(value, data):
+    indices = []
+    for idx, item in enumerate(data):
+        if value == item:
+            indices.append(idx)
+    return indices
+
 def UniqueVals(data):
     """
-    All unique values
+    Returns unique values + frequencies
     """
-    data = numpy.ma.array(data)
-    uniques = numpy.ma.sort(list(set(data.compressed())))
-    numbers = numpy.zeros((len(uniques)))
-    for idx, unique in enumerate(uniques):
-        number = numpy.ma.equal(data, unique).sum()
-        numbers[idx] = number
-    return uniques, numbers
+    try:
+        uniques = list(set(data))
+    except TypeError:
+        data = [data]
+        uniques = data
+    length = len(uniques)
+    freqs = []
+    # now find frequencies
+    for item in uniques:
+        nummatches = IndexMatches(item, data)
+        freqs.append(Count(numpy.array(nummatches)))
+    return uniques, freqs
+def IndexMatches(value, data):
+    indices = []
+    for idx, item in enumerate(data):
+        if value == item:
+            indices.append(idx)
+    return indices
+
+def UniqueVals(data):
+    """
+    Returns unique values + frequencies
+    """
+    try:
+        uniques = list(set(data))
+    except TypeError:
+        data = [data]
+        uniques = data
+    length = len(uniques)
+    freqs = []
+    # now find frequencies
+    for item in uniques:
+        nummatches = IndexMatches(item, data)
+        freqs.append(Count(numpy.array(nummatches)))
+    return uniques, freqs
+
 
 def CalculateRanks(data, start = 1):
     data = numpy.ma.array(data)
@@ -109,7 +169,31 @@ def CalculateRanks(data, start = 1):
     return numpy.ma.numpy.masked_where(numpy.ma.equal(ranks, 0), ranks)
 
 def GetSSCP_M(data):
-    Xd = data - numpy.ma.average(data)
+    Xd = data - numpy.ma.avdef IndexMatches(value, data):
+    indices = []
+    for idx, item in enumerate(data):
+        if value == item:
+            indices.append(idx)
+    return indices
+
+def UniqueVals(data):
+    """
+    Returns unique values + frequencies
+    """
+    try:
+        uniques = list(set(data))
+    except TypeError:
+        data = [data]
+        uniques = data
+    length = len(uniques)
+    freqs = []
+    # now find frequencies
+    for item in uniques:
+        nummatches = IndexMatches(item, data)
+        freqs.append(Count(numpy.array(nummatches)))
+    return uniques, freqs
+
+erage(data)
     Xdp = numpy.ma.transpose(Xd)
     return numpy.ma.dot(Xdp, Xd)
 
