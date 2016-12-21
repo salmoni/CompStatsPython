@@ -18,63 +18,39 @@ sum - returns the sum of non-missing data
 minimum - returns the minimum of non-missing data
 maximum - returns the maximum of non-missing data
 Range - maximum minus the minimum
-proportions - 
-relfreqmode - 
-cumsum - 
-cumproduct - 
-cumpercent - 
-frequencies - 
-trimmeddata - 
-trimmedmean - 
-bitrimmedmean - 
-mean - 
-median - 
-mode - 
-moment - 
+proportions -
+relfreqmode -
+cumsum -
+cumproduct -
+cumpercent -
+frequencies -
+trimmeddata -
+trimmedmean -
+bitrimmedmean -
+mean -
+median -
+mode -
+moment -
 TukeyQuartiles - returns Tukey's hinges
 MooreQuartiles - returns Moore & McCabe's hinges
 SPQuantile - quantile used by S-Plus
 TradQuantile - quantile used by SPSS
 MidstepQuantile - mid-step qua
-Q1 - Q1 quantile from Hyndnumpy.man & Fan
-Q2 - Q2 quantile from Hyndnumpy.man & Fan
-Q3 - Q3 quantile from Hyndnumpy.man & Fan
-Q4 - Q4 quantile from Hyndnumpy.man & Fan
-Q5 - Q5 quantile from Hyndnumpy.man & Fan
-Q6 - Q6 quantile from Hyndnumpy.man & Fan
-Q7 - Q7 quantile from Hyndnumpy.man & Fan
-Q8 - Q8 quantile from Hyndnumpy.man & Fan
-Q9 - Q9 quantile from Hyndnumpy.man & Fan 
-InterquartileRange - 
+Q1 - Q1 quantile from Hyndman & Fan
+Q2 - Q2 quantile from Hyndman & Fan
+Q3 - Q3 quantile from Hyndman & Fan
+Q4 - Q4 quantile from Hyndman & Fan
+Q5 - Q5 quantile from Hyndman & Fan
+Q6 - Q6 quantile from Hyndman & Fan
+Q7 - Q7 quantile from Hyndman & Fan
+Q8 - Q8 quantile from Hyndman & Fan
+Q9 - Q9 quantile from Hyndman & Fan
+InterquartileRange -
 SS - sum of squares
 SSDevs - sum of squared deviations from the mean
 SampVar - sample variance
 PopVar - population variance
-SampStdDev - sample standardef IndexMatches(value, data):
-    indices = []
-    for idx, item in enumerate(data):
-        if value == item:
-            indices.append(idx)
-    return indices
-
-def UniqueVals(data):
-    """
-    Returns unique values + frequencies
-    """
-    try:
-        uniques = list(set(data))
-    except TypeError:
-        data = [data]
-        uniques = data
-    length = len(uniques)
-    freqs = []
-    # now find frequencies
-    for item in uniques:
-        nummatches = IndexMatches(item, data)
-        freqs.append(Count(numpy.array(nummatches)))
-    return uniques, freqs
-
-d deviation
+SampStdDev - sample standard deviation
 PopStdDev - population standard deviation
 StdErr - standard error
 CoeffVar - coefficient of variation
@@ -93,9 +69,8 @@ OutliersSQR - returns two arrays, one of outliers defined by 1.5 * IQR, and the 
 
 """
 import math
-import numpy 
+import numpy
 import numpy.ma
-
 
 def Vsort(data):
     # check that 'data' is a vector
@@ -114,47 +89,6 @@ def IndexMatches(value, data):
             indices.append(idx)
     return indices
 
-def UniqueVals(data):
-    """
-    Returns unique values + frequencies
-    """
-    try:
-        uniques = list(set(data))
-    except TypeError:
-        data = [data]
-        uniques = data
-    length = len(uniques)
-    freqs = []
-    # now find frequencies
-    for item in uniques:
-        nummatches = IndexMatches(item, data)
-        freqs.append(Count(numpy.array(nummatches)))
-    return uniques, freqs
-def IndexMatches(value, data):
-    indices = []
-    for idx, item in enumerate(data):
-        if value == item:
-            indices.append(idx)
-    return indices
-
-def UniqueVals(data):
-    """
-    Returns unique values + frequencies
-    """
-    try:
-        uniques = list(set(data))
-    except TypeError:
-        data = [data]
-        uniques = data
-    length = len(uniques)
-    freqs = []
-    # now find frequencies
-    for item in uniques:
-        nummatches = IndexMatches(item, data)
-        freqs.append(Count(numpy.array(nummatches)))
-    return uniques, freqs
-
-
 def CalculateRanks(data, start = 1):
     data = numpy.ma.array(data)
     vals = sort(list(set(data.compressed())))
@@ -168,6 +102,7 @@ def CalculateRanks(data, start = 1):
         rank = rank + incr
     return numpy.ma.numpy.masked_where(numpy.ma.equal(ranks, 0), ranks)
 
+"""
 def GetSSCP_M(data):
     Xd = data - numpy.ma.avdef IndexMatches(value, data):
     indices = []
@@ -175,6 +110,7 @@ def GetSSCP_M(data):
         if value == item:
             indices.append(idx)
     return indices
+"""
 
 def UniqueVals(data):
     """
@@ -193,10 +129,6 @@ def UniqueVals(data):
         freqs.append(Count(numpy.array(nummatches)))
     return uniques, freqs
 
-erage(data)
-    Xdp = numpy.ma.transpose(Xd)
-    return numpy.ma.dot(Xdp, Xd)
-
 def GetVarsCovars_M(data):
     SSCP = GetSSCP_M(data)
     return SSCP / len(data[1]) # is the len(data[1]) correct?
@@ -206,7 +138,7 @@ def GetVariances(data):
 
 def GetStdDevs(data):
     return numpy.ma.sqrt(GetVariances(data))
-    
+
 def GetCorrelationnMatrix(data):
     VCV = GetVarsCovars_M(data)
     return VCV / numpy.ma.sqrt(numpy.ma.diagonal(VCV))
@@ -229,7 +161,7 @@ def Sum(data):
         return int(numpy.ma.sum(data))
     elif 'float' in t:
         return float(numpy.ma.sum(data))
-    else: 
+    else:
         return None
 
 def Minimum(data):
@@ -243,7 +175,7 @@ def Minimum(data):
         return int(numpy.ma.minimum(data))
     elif 'float' in t:
         return float(numpy.ma.minimum(data))
-    else: 
+    else:
         return None
 
 def Maximum(data):
@@ -257,7 +189,7 @@ def Maximum(data):
         return int(numpy.ma.maximum(data))
     elif 'float' in t:
         return float(numpy.ma.maximum(data))
-    else: 
+    else:
         return None
 
 def Range(data):
@@ -299,7 +231,7 @@ def RelFreqMode(data):
     total = numpy.ma.sum(nums)
     modes = numpy.ma.equal(data, m)
     return modes, (m / float(total)) * 100.0
-    
+
 def sum(data):
     """
     Sum
@@ -317,7 +249,7 @@ def CumSum(data):
         return int(cumsum(data)[-1])
     elif 'float' in t:
         return float(CumSum(data)[-1])
-    else: 
+    else:
         return None
 
 def CumProduct(data):
@@ -331,7 +263,7 @@ def CumProduct(data):
         return int(numpy.ma.cumprod(data)[-1])
     elif 'float' in t:
         return float(numpy.ma.cumprod(data)[-1])
-    else: 
+    else:
         return None
 
 def CumPercent(data):
@@ -410,7 +342,7 @@ def WinsorisedMean(Data, trim):
                 idx_upper = numpy.ma.greater(Data, UB)
                 val_min = Data[-idx_lower][0]
                 val_max = Data[-idx_upper][-1]
-                Data[idx_lower] = LB 
+                Data[idx_lower] = LB
                 Data[idx_upper] = UB
                 return Mean(Data)
         except:
@@ -443,7 +375,7 @@ def Median(data):
             return (data[l/2], data[(l/2)+1])
     if 'float' in t or 'int' in t:
         return float(numpy.ma.median(data))
-    else: 
+    else:
         return None
 
 def Mode(data):
@@ -462,11 +394,11 @@ def Moment(data, m):
     """
     t = str(data.dtype.type)
     if 'string' in t:
-        return 
+        return
     elif 'float' in t or 'int' in t:
         return (Sum((data - numpy.ma.average(data)) ** m) / Count(data))
     else:
-        return 
+        return
 
 def TukeyQuartiles(data):
     """
@@ -795,7 +727,7 @@ def GeometricMean(data):
     """
     t = str(data.dtype.type)
     if 'int' in t or 'float' in t:
-        return math.exp(Mean(numpy.ma.log(data))) 
+        return math.exp(Mean(numpy.ma.log(data)))
     else:
         return
 
@@ -809,7 +741,7 @@ def HarmonicMean(data):
             div1 = numpy.ma.divide(1.0, data)
             m1 = Mean(div1)
             hm = numpy.ma.divide(1.0, m1)
-            return hm 
+            return hm
         except ZeroDivisionError:
             return None
     else:
@@ -828,7 +760,7 @@ def MSSD(data):
             return None
     else:
         return
-    
+
 def Skewness(data):
     """
     Skewness
@@ -929,4 +861,3 @@ def OutliersIQR(data):
     step1 = numpy.ma.compress(numpy.ma.greater(data, IQR[0]), data)
     step2 = numpy.ma.compress(numpy.ma.less(step1, IQR[1]), data)
     return outliers, step2
-
